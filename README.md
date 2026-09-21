@@ -71,3 +71,19 @@ repairshop_project/
 
 ## Screenshots
 See attached PDF for screenshots of the list, create, edit, and delete views.
+
+## Deploy on Render
+
+This repository includes a `render.yaml` blueprint for deploying the app as a Render web service.
+
+1. Push the repository to GitHub or GitLab.
+2. In Render, choose **New > Blueprint** and select the repository.
+3. Render will install dependencies, collect static files, run migrations, and start Gunicorn.
+4. Open the deployed URL and create an admin account from the Render Shell:
+   ```
+   python manage.py createsuperuser
+   ```
+
+The blueprint generates `DJANGO_SECRET_KEY` automatically. The app uses SQLite, so data stored on
+Render is ephemeral and can be lost on redeploys. Use a Render PostgreSQL database before using
+this for persistent production data.
