@@ -1,0 +1,41 @@
+{% extends 'tickets/base.html' %}
+{% block title %}All Tickets{% endblock %}
+{% block content %}
+<div class="top-bar">
+    <h2>Repair Tickets</h2>
+    <a href="{% url 'ticket_create' %}" class="btn btn-primary">+ New Ticket</a>
+</div>
+
+<form method="get" class="filter-bar">
+    <select name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for value, label in status_choices %}
+        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+<table>
+    <tr>
+        <th>#</th><th>Customer</th><th>Device</th><th>Issue</th><th>Status</th><th>Cost</th><th>Received</th><th>Actions</th>
+    </tr>
+    {% for ticket in tickets %}
+    <tr>
+        <td>{{ ticket.id }}</td>
+        <td>{{ ticket.customer_name }}</td>
+        <td>{{ ticket.get_device_type_display }} - {{ ticket.device_model }}</td>
+        <td>{{ ticket.issue_description|truncatechars:40 }}</td>
+        <td><span class="status-badge {{ ticket.status }}">{{ ticket.get_status_display }}</span></td>
+        <td>₹{{ ticket.estimated_cost }}</td>
+        <td>{{ ticket.date_received }}</td>
+        <td>
+            <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-view">View</a>
+            <a href="{% url 'ticket_update' ticket.pk %}" class="btn btn-edit">Edit</a>
+            <a href="{% url 'ticket_delete' ticket.pk %}" class="btn btn-delete">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8">No tickets yet. Create one to get started.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
